@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ත්‍රිප්ත ඥාන තරගය | විචිත්‍ර ප්‍රශ්න සහ ඡායාරූප</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a2f1f, #052010);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Noto Sans Sinhala', 'Poppins', system-ui, sans-serif;
+            padding: 16px;
+        }
+
+        /* login overlay */
+        .login-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: linear-gradient(135deg, #fff8ef, #ffefdb);
+            border-radius: 64px;
+            padding: 40px 28px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .login-card h2 {
+            color: #2c5a2e;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border-radius: 60px;
+            border: 2px solid #dbb46a;
+            font-size: 1rem;
+            background: #fffdf9;
+            font-family: inherit;
+        }
+
+        .login-card button {
+            background: linear-gradient(95deg, #ffaa44, #ff8c1a);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+            transition: 0.15s;
+            color: #2c2b1f;
+            box-shadow: 0 6px 0 #a1550e;
+        }
+
+        .login-card button:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #a1550e;
+        }
+
+        .error-msg {
+            color: #c23b22;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        /* main game container */
+        .game-container {
+            max-width: 1100px;
+            width: 100%;
+            background: #fef5e8;
+            border-radius: 60px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .game-header {
+            background: linear-gradient(95deg, #2d6a2f, #1d4a1a);
+            padding: 18px 22px;
+            color: #fff3cf;
+            text-align: center;
+            border-bottom: 4px solid #ffcd7e;
+        }
+
+        .level-badge {
+            background: #ffb347;
+            display: inline-block;
+            padding: 6px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #2a3b2a;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.2);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            background: #ecdcaa;
+            padding: 12px 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .stat-box {
+            background: #2f4d2d;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ffefb0;
+            font-size: 0.95rem;
+            box-shadow: inset 0 1px 2px #4f7e4a, 0 3px 4px rgba(0,0,0,0.2);
+        }
+
+        .quiz-area {
+            padding: 25px 24px 20px;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #ffffff, #fff7e8);
+            border-radius: 50px;
+            padding: 25px 18px;
+            margin-bottom: 24px;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.2s;
+            border: 1px solid #ffdeae;
+        }
+
+        .question-icon {
+            font-size: 3.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+            background: radial-gradient(circle, #ffe6b3, #ffd58c);
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+            border-radius: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+            color: #bf6f00;
+        }
+
+        .question-text {
+            font-size: 1.65rem;
+            font-weight: 800;
+            text-align: center;
+            word-break: break-word;
+            color: #2c4724;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0 20px;
+        }
+
+        .opt-btn {
+            background: linear-gradient(98deg, #fff5e8, #ffefdd);
+            border: 2px solid #e2b87a;
+            border-radius: 100px;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.12s linear;
+            color: #3a2a1a;
+            font-family: inherit;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        }
+
+        .opt-btn:active {
+            transform: scale(0.98);
+            background: #ffe0bd;
+        }
+
+        .opt-letter {
+            background: #c8812e;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .feedback {
+            background: #2f4629;
+            border-radius: 50px;
+            padding: 14px;
+            text-align: center;
+            color: #ffefbf;
+            margin: 20px 0;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .retry-btn, .logout-btn {
+            background: linear-gradient(95deg, #ffaa44, #fa9419);
+            border: none;
+            width: 100%;
+            padding: 14px 0;
+            font-weight: bold;
+            border-radius: 60px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.08s linear;
+            box-shadow: 0 5px 0 #a75512;
+            color: #2f2b1c;
+        }
+
+        .retry-btn:active, .logout-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #a75512;
+        }
+
+        .logout-btn {
+            background: linear-gradient(95deg, #9b6a3c, #7b4f28);
+            color: white;
+            box-shadow: 0 5px 0 #543a1a;
+        }
+
+        .highscore-panel {
+            background: #1f301b;
+            padding: 18px 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-top: 3px solid #ffcd6b;
+            justify-content: space-between;
+        }
+
+        .user-stats {
+            background: #2e4527;
+            border-radius: 45px;
+            padding: 14px 20px;
+            min-width: 210px;
+            color: #ffefbf;
+            flex: 1;
+        }
+
+        .leaderboard {
+            background: #2e4527;
+            border-radius: 45px;
+            padding: 14px 20px;
+            flex: 2;
+            color: #ffefbf;
+        }
+
+        .leaderboard h4, .user-stats h4 {
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ffc285;
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .leaderboard ol {
+            padding-left: 22px;
+            margin-top: 8px;
+        }
+
+        .leaderboard li {
+            margin: 6px 0;
+            font-weight: 500;
+        }
+
+        .current-user-highlight {
+            color: #ffdd99;
+            font-weight: bold;
+            text-shadow: 0 0 2px #a55800;
+        }
+
+        /* modal styles */
+        .modal-choice {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1200;
+            backdrop-filter: blur(6px);
+        }
+        .modal-card {
+            background: linear-gradient(145deg, #fff3e2, #ffe6ce);
+            border-radius: 56px;
+            padding: 32px 24px;
+            max-width: 380px;
+            text-align: center;
+            animation: bounceIn 0.2s ease;
+            border: 1px solid #ffb668;
+        }
+        .modal-card p {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+        }
+        .modal-buttons button {
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.05s linear;
+        }
+        .modal-buttons button:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.96);}
+            to { opacity: 1; transform: scale(1);}
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.92); opacity: 0;}
+            100% { transform: scale(1); opacity: 1;}
+        }
+
+        @media (max-width: 650px) {
+            .question-text { font-size: 1.3rem; }
+            .opt-btn { padding: 12px 16px; gap: 12px; font-size: 0.9rem; }
+            .opt-letter { width: 38px; height: 38px; font-size: 1.1rem; }
+            .stats-row { justify-content: center; }
+            .stat-box { font-size: 0.85rem; }
+            .highscore-panel { flex-direction: column; }
+        }
+
+        /* touch friendly */
+        button, .opt-btn {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+<div id="appRoot"></div>
+
+<script>
+    // ========================  HELPER: SHUFFLE ARRAY ========================
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // ========================  LEVEL DATA (with randomization on reset) ========================
+    // Level 1: Sinhala vocabulary (50 words)
+    const baseVocab = [
+        { sinhala: "ගෙය", eng: "house" }, { sinhala: "පොත", eng: "book" }, { sinhala: "ගස", eng: "tree" },
+        { sinhala: "ජලය", eng: "water" }, { sinhala: "සූර්යයා", eng: "sun" }, { sinhala: "චන්ද්‍රයා", eng: "moon" },
+        { sinhala: "මල", eng: "flower" }, { sinhala: "කුරුල්ලා", eng: "bird" }, { sinhala: "මාළුවා", eng: "fish" },
+        { sinhala: "අහස", eng: "sky" }, { sinhala: "රතු", eng: "red" }, { sinhala: "නිල්", eng: "blue" },
+        { sinhala: "කෑම", eng: "food" }, { sinhala: "සතුට", eng: "happiness" }, { sinhala: "විද්‍යාලය", eng: "school" },
+        { sinhala: "ගුරුවරයා", eng: "teacher" }, { sinhala: "ශිෂ්‍යයා", eng: "student" }, { sinhala: "රිය", eng: "vehicle" },
+        { sinhala: "මව", eng: "mother" }, { sinhala: "පියා", eng: "father" }, { sinhala: "සහෝදරයා", eng: "brother" },
+        { sinhala: "සහෝදරිය", eng: "sister" }, { sinhala: "මිතුරා", eng: "friend" }, { sinhala: "බළලා", eng: "cat" },
+        { sinhala: "බල්ලා", eng: "dog" }, { sinhala: "කිරි", eng: "milk" }, { sinhala: "පාන්", eng: "bread" },
+        { sinhala: "යතුර", eng: "key" }, { sinhala: "දුරකථනය", eng: "phone" }, { sinhala: "පරිගණකය", eng: "computer" },
+        { sinhala: "අම්මා", eng: "mom" }, { sinhala: "තාත්තා", eng: "dad" }, { sinhala: "මාමා", eng: "uncle" },
+        { sinhala: "නැන්දා", eng: "aunt" }, { sinhala: "ගම", eng: "village" }, { sinhala: "නගරය", eng: "city" },
+        { sinhala: "සාප්පුව", eng: "shop" }, { sinhala: "රෝහල", eng: "hospital" }, { sinhala: "බස් රථය", eng: "bus" },
+        { sinhala: "කෝප්පය", eng: "cup" }, { sinhala: "පිඟාන", eng: "plate" }, { sinhala: "හැන්ද", eng: "spoon" },
+        { sinhala: "දෙබලක", eng: "fork" }, { sinhala: "පිහිය", eng: "knife" }, { sinhala: "මේසය", eng: "table" },
+        { sinhala: "පුටුව", eng: "chair" }, { sinhala: "ඇඳ", eng: "bed" }, { sinhala: "කවුළුව", eng: "window" },
+        { sinhala: "දොර", eng: "door" }, { sinhala: "වීදිය", eng: "street" }
+    ];
+
+    // generate fresh math level (50 random problems, shuffled order, each with randomized options order)
+    function generateFreshMathLevel() {
+        let raw = [];
+        for(let i=0; i<50; i++) {
+            let type = i % 4;
+            let a,b,correct,qText;
+            if(type === 0) { a = Math.floor(Math.random()*40)+10; b = Math.floor(Math.random()*40)+1; correct = a+b; qText = `${a} + ${b} = ?`; }
+            else if(type === 1) { a = Math.floor(Math.random()*70)+30; b = Math.floor(Math.random()*a)+1; correct = a-b; qText = `${a} - ${b} = ?`; }
+            else if(type === 2) { a = Math.floor(Math.random()*12)+2; b = Math.floor(Math.random()*12)+2; correct = a*b; qText = `${a} × ${b} = ?`; }
+            else { b = Math.floor(Math.random()*10)+2; correct = Math.floor(Math.random()*12)+2; a = b*correct; qText = `${a} ÷ ${b} = ?`; }
+            let opts = new Set([correct]);
+            while(opts.size<4) { let offset = Math.floor(Math.random()*9)-4; let cand = correct+offset; if(cand>=0 && cand!==correct) opts.add(cand); if(opts.size<2) opts.add(correct+1); if(opts.size<3) opts.add(correct-1>0?correct-1:correct+2); }
+            let options = Array.from(opts);
+            // randomize options order
+            options = shuffleArray([...options]);
+            raw.push({ text: qText, correct: correct, options: options });
+        }
+        return shuffleArray(raw); // shuffle question order
+    }
+
+    // GK fresh level (shuffle static questions and randomize options order per question)
+    function generateFreshGKLevel() {
+        let baseGK = [
+            { text: "ශ්‍රී ලංකාවේ අගනුවර?", correct: "කොළඹ", options: ["කොළඹ","මහනුවර","ගාල්ල","යාපනය"] },
+            { text: "සූර්යයාගේ ආලෝකය පොළොවට වැටෙන කාලය?", correct: "මිනිත්තු 8", options: ["තත්පර 8","මිනිත්තු 8","පැය 8","තත්පර 800"] },
+            { text: "මානව ශරීරයේ විශාලතම අවයවය?", correct: "සම", options: ["හදවත","අක්මාව","සම","පෙනහැල්ල"] },
+            { text: "ශ්‍රී ලංකාවේ ජාතික ක්‍රීඩාව?", correct: "පිහිනුම්", options: ["ක්‍රිකට්","පාපන්දු","පිහිනුම්","මලල ක්‍රීඩා"] },
+            { text: "නයිල් ගඟ පිහිටි මහාද්වීපය?", correct: "අප්‍රිකාව", options: ["ආසියාව","යුරෝපය","අප්‍රිකාව","ඕස්ට්‍රේලියාව"] },
+            { text: "ලෝකයේ උසම කන්ද?", correct: "එවරස්ට්", options: ["K2","එවරස්ට්","කංචෙන්ජංගා","ධවලගිරි"] },
+            { text: "ශ්‍රී ලංකාවේ ජාතික පුෂ්පය?", correct: "මානෙල්", options: ["මානෙල්","නෙළුම්","සපු","අඹ"] },
+            { text: "ප්‍රථම මිනිසා සඳ මත පා තැබුවේ?", correct: "නීල් ආම්ස්ට්‍රෝං", options: ["බස් ඔල්ඩ්‍රින්","නීල් ආම්ස්ට්‍රෝං","යුරි ගගාරින්","මයිකල් කොලින්ස්"] },
+            { text: "රුපියල් 1000 නෝට්ටුවේ ප්‍රධාන වර්ණය?", correct: "රෝස", options:["රෝස","නිල්","කොළ","දම්"] },
+            { text: "ශ්‍රී ලංකාවේ ජාතික ගස?", correct: "නා", options: ["බෝ","නා","මා","සල්"] },
+            { text: "විදුලි බුබුල සොයාගත්තේ කවුද?", correct: "තෝමස් එඩිසන්", options:["නිකොලා ටෙස්ලා","තෝමස් එඩිසන්","ග්‍රහැම් බෙල්","අයින්ස්ටයින්"] },
+            { text: "සිංහල අලුත් අවුරුද්ද පැමිණෙන මාසය?", correct: "බක්", options:["වෙසක්","බක්","ඇසළ","නිකිණි"] },
+            { text: "ඔක්සිජන් රසායනික සංකේතය?", correct: "O", options:["O","Ox","O2","Om"] },
+            { text: "පෘථිවියේ විශාලතම සාගරය?", correct: "පැසිෆික්", options:["ඉන්දියන්","අත්ලාන්තික්","පැසිෆික්","ආක්ටික්"] },
+            { text: "ශ්‍රී ලංකාවේ ප්‍රථම අග්‍රාමාත්‍යවරයා?", correct: "ඩී.එස්. සේනානායක", options:["සිරිමාවෝ බණ්ඩාරනායක","ඩී.එස්. සේනානායක","ජේ.ආර්. ජයවර්ධන","ආර්. ප්‍රේමදාස"] }
+        ];
+        // duplicate until 50 (add variations)
+        let full = [...baseGK];
+        while(full.length < 50) {
+            full.push({ text: `සාමාන්‍ය දැනුම ප්‍රශ්නය ${full.length+1}: මහා බ්‍රිතාන්‍යයේ අගනුවර?`, correct: "ලන්ඩන්", options:["ලන්ඩන්","පැරිස්","බර්ලින්","මැඩ්‍රිඩ්"] });
+        }
+        // randomize options for each question and shuffle questions
+        full = full.map(q => {
+            let shuffledOpts = shuffleArray([...q.options]);
+            return { text: q.text, correct: q.correct, options: shuffledOpts };
+        });
+        return shuffleArray(full);
+    }
+
+    // Level 1 fresh: shuffle word list
+    function generateFreshVocabLevel() {
+        let shuffledWords = shuffleArray([...baseVocab]);
+        return shuffledWords.map(w => ({ text: w.sinhala, correct: w.eng, options: [] }));
+    }
+
+    // Global caches (will be regenerated on retry)
+    let questionsCache = {1: null, 2: null, 3: null};
+
+    function getLevelQuestions(level, forceFresh = false) {
+        if(forceFresh || !questionsCache[level]) {
+            if(level === 1) questionsCache[1] = generateFreshVocabLevel();
+            else if(level === 2) questionsCache[2] = generateFreshMathLevel();
+            else questionsCache[3] = generateFreshGKLevel();
+        }
+        return questionsCache[level];
+    }
+
+    // reset current level's questions (shuffle everything)
+    function regenerateCurrentLevelQuestions(level) {
+        if(level === 1) questionsCache[1] = generateFreshVocabLevel();
+        else if(level === 2) questionsCache[2] = generateFreshMathLevel();
+        else if(level === 3) questionsCache[3] = generateFreshGKLevel();
+    }
+
+    // ========================  USER SYSTEM ========================
+    let currentUser = null;
+    let gameState = { level: 1, qIndex: 0, score: 0, answered: false, awaitingNext: false };
+    let currentQObject = null, currentOptions = [], correctAnswerVal = null;
+    let autoTimer = null;
+    const allVocabRef = baseVocab; // for distractors
+
+    function getVocabOptions(correctEng) {
+        let wrongs = allVocabRef.filter(v=>v.eng !== correctEng).map(v=>v.eng);
+        let unique = [...new Set(wrongs)];
+        let shuffled = shuffleArray([...unique]);
+        let opts = [correctEng, ...shuffled.slice(0,3)];
+        while(opts.length<4) opts.push("?");
+        return shuffleArray(opts);
+    }
+
+    // localStorage for users
+    function getAllUsers() { return JSON.parse(localStorage.getItem("quizUsers") || "{}"); }
+    function saveAllUsers(users) { localStorage.setItem("quizUsers", JSON.stringify(users)); }
+
+    function persistUserProgress() {
+        if(!currentUser) return;
+        let users = getAllUsers();
+        if(users[currentUser.username]) {
+            users[currentUser.username].level = gameState.level;
+            users[currentUser.username].qIndex = gameState.qIndex;
+            users[currentUser.username].score = gameState.score;
+            let oldBest = users[currentUser.username].bestScore || 0;
+            if(gameState.score > oldBest) {
+                users[currentUser.username].bestScore = gameState.score;
+                currentUser.bestScore = gameState.score;
+            }
+            saveAllUsers(users);
+            renderLeaderboardAndStats();
+        }
+    }
+
+    function updatePersonalBestOnScore() {
+        if(!currentUser) return;
+        let users = getAllUsers();
+        let oldBest = users[currentUser.username]?.bestScore || 0;
+        if(gameState.score > oldBest) {
+            users[currentUser.username].bestScore = gameState.score;
+            currentUser.bestScore = gameState.score;
+            saveAllUsers(users);
+            renderLeaderboardAndStats();
+            return true;
+        }
+        return false;
+    }
+
+    function loadUser(username, password) {
+        let users = getAllUsers();
+        if(users[username]) {
+            if(users[username].password !== password) return null;
+            return {
+                username,
+                passwordHash: password,
+                level: users[username].level,
+                qIndex: users[username].qIndex,
+                score: users[username].score,
+                bestScore: users[username].bestScore || 0
+            };
+        } else {
+            users[username] = { password: password, level: 1, qIndex: 0, score: 0, bestScore: 0 };
+            saveAllUsers(users);
+            return { username, passwordHash: password, level: 1, qIndex: 0, score: 0, bestScore: 0 };
+        }
+    }
+
+    // ========================  GAME MECHANICS ========================
+    function resetCurrentLevel() {
+        // Regenerate questions for this level (fresh random order & options)
+        regenerateCurrentLevelQuestions(gameState.level);
+        gameState.qIndex = 0;
+        gameState.score = 0;
+        gameState.answered = false;
+        gameState.awaitingNext = false;
+        persistUserProgress();
+        loadCurrentQuestion();
+        renderLeaderboardAndStats();
+    }
+
+    function scheduleAutoNext() {
+        if(autoTimer) clearTimeout(autoTimer);
+        autoTimer = setTimeout(() => {
+            if(gameState.awaitingNext) return;
+            goToNextQuestion();
+        }, 700);
+    }
+
+    function goToNextQuestion() {
+        if(gameState.awaitingNext) return;
+        let questions = getLevelQuestions(gameState.level);
+        if(gameState.qIndex + 1 < questions.length) {
+            gameState.qIndex++;
+            gameState.answered = false;
+            persistUserProgress();
+            loadCurrentQuestion();
+        } else {
+            endOfLevelHandler();
+        }
+    }
+
+    function endOfLevelHandler() {
+        let questions = getLevelQuestions(gameState.level);
+        let totalQ = questions.length;
+        let maxScore = totalQ * 2;
+        if(gameState.score === maxScore) {
+            if(gameState.level < 3) {
+                gameState.level++;
+                // When moving to next level, ensure questions are fresh (optional but good)
+                if(!questionsCache[gameState.level]) getLevelQuestions(gameState.level, false);
+                gameState.qIndex = 0;
+                gameState.score = 0;
+                gameState.answered = false;
+                persistUserProgress();
+                feedbackMsg.innerHTML = `🎉 පරිපූර්ණයි! මට්ටම ${gameState.level} අගුළු ඇරුණි. ✨`;
+                loadCurrentQuestion();
+            } else {
+                feedbackMsg.innerHTML = `🏆 අභිනන්දනයි! ඔබ සියලු මට්ටම් සම්පූර්ණ කළා! ලකුණු ${gameState.score}/${maxScore}`;
+                document.querySelectorAll(".opt-btn").forEach(btn => btn.disabled = true);
+                gameState.awaitingNext = true;
+            }
+        } else {
+            feedbackMsg.innerHTML = `⚠️ පරිපූර්ණ ලකුණු නැත (${gameState.score}/${maxScore}). ඊළඟ මට්ටම අගුළු නොවැටේ. නැවත උත්සාහ කරන්න.`;
+            gameState.awaitingNext = true;
+        }
+        updateStatsDisplay();
+        renderLeaderboardAndStats();
+    }
+
+    function loadCurrentQuestion() {
+        if(gameState.awaitingNext) return;
+        let questions = getLevelQuestions(gameState.level);
+        if(gameState.qIndex >= questions.length) {
+            endOfLevelHandler();
+            return;
+        }
+        currentQObject = questions[gameState.qIndex];
+        if(gameState.level === 1) {
+            let correctEng = currentQObject.correct;
+            currentOptions = getVocabOptions(correctEng);
+            correctAnswerVal = correctEng;
+        } else {
+            // For levels 2 & 3, randomize options order each time question loads
+            let opts = [...currentQObject.options];
+            currentOptions = shuffleArray(opts);
+            correctAnswerVal = currentQObject.correct;
+        }
+        renderQuestionUI();
+        updateStatsDisplay();
+        gameState.answered = false;
+        document.querySelectorAll(".opt-btn").forEach(btn => btn.disabled = false);
+        let iconDiv = document.getElementById("questionIcon");
+        if(iconDiv) {
+            if(gameState.level===1) iconDiv.innerHTML = '<i class="fas fa-language"></i>';
+            else if(gameState.level===2) iconDiv.innerHTML = '<i class="fas fa-calculator"></i>';
+            else iconDiv.innerHTML = '<i class="fas fa-globe-asia"></i>';
+        }
+        feedbackMsg.innerHTML = "📖 පිළිතුරක් තෝරන්න. සෑම නිවැරදියකට ලකුණු 2ක්!";
+    }
+
+    function renderQuestionUI() {
+        document.getElementById("questionText").innerText = currentQObject.text;
+        const container = document.getElementById("optionsContainer");
+        container.innerHTML = "";
+        const letters = ["A","B","C","D"];
+        currentOptions.forEach((opt, idx) => {
+            let btn = document.createElement("button");
+            btn.className = "opt-btn";
+            btn.innerHTML = `<div class="opt-letter">${letters[idx]}</div><div>${opt}</div>`;
+            btn.addEventListener("click", () => handleAnswer(opt, btn));
+            container.appendChild(btn);
+        });
+    }
+
+    function showWrongModal() {
+        let existing = document.querySelector(".modal-choice");
+        if(existing) existing.remove();
+        let modalDiv = document.createElement("div");
+        modalDiv.className = "modal-choice";
+        modalDiv.innerHTML = `
+            <div class="modal-card">
+                <p>❌ පිළිතුර වැරදියි!<br> කුමක් කරන්නද?</p>
+                <div class="modal-buttons">
+                    <button id="restartLevelBtn" style="background:#ffaa44;">⟳ මුල සිට නැවත (නව ප්‍රශ්න)</button>
+                    <button id="continueBtn" style="background:#6f9e3f;">➡ මෙතනින් ඉදිරියට (ලකුණු නැත)</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalDiv);
+        document.getElementById("restartLevelBtn").onclick = () => {
+            modalDiv.remove();
+            resetCurrentLevel();
+        };
+        document.getElementById("continueBtn").onclick = () => {
+            modalDiv.remove();
+            gameState.answered = true;
+            goToNextQuestion();
+        };
+    }
+
+    function handleAnswer(selected, btnEl) {
+        if(gameState.answered || gameState.awaitingNext) return;
+        let isCorrect = (selected === correctAnswerVal);
+        if(isCorrect) {
+            gameState.score += 2;
+            gameState.answered = true;
+            feedbackMsg.innerHTML = `✅ නිවැරදි! +2 ලකුණු (මුළු: ${gameState.score}) 🎉`;
+            btnEl.style.background = "#b8e4b0";
+            document.querySelectorAll(".opt-btn").forEach(btn => btn.disabled = true);
+            updatePersonalBestOnScore();
+            persistUserProgress();
+            scheduleAutoNext();
+        } else {
+            gameState.answered = true;
+            document.querySelectorAll(".opt-btn").forEach(btn => btn.disabled = true);
+            btnEl.style.background = "#f0b3a0";
+            document.querySelectorAll(".opt-btn").forEach(btn => {
+                if(btn.innerText.includes(correctAnswerVal)) btn.style.background = "#c8e6a5";
+            });
+            feedbackMsg.innerHTML = `❌ වැරදියි. නිවැරදි පිළිතුර: ${correctAnswerVal}`;
+            showWrongModal();
+        }
+        updateStatsDisplay();
+        renderLeaderboardAndStats();
+    }
+
+    function updateStatsDisplay() {
+        let total = getLevelQuestions(gameState.level).length;
+        document.getElementById("qCounter").innerText = `${gameState.qIndex+1}/${total}`;
+        document.getElementById("scoreSpan").innerText = `${gameState.score}/${total*2}`;
+        document.getElementById("levelIndexSpan").innerText = gameState.level;
+        document.getElementById("levelName").innerHTML = `Level ${gameState.level} · ${gameState.level===1?"සිංහල වචන":(gameState.level===2?"ගණිත ගැටලු":"සාමාන්‍ය දැනුම")}`;
+    }
+
+    function renderLeaderboardAndStats() {
+        const leaderDiv = document.getElementById("leaderboardList");
+        const userStatsDiv = document.getElementById("userStatsDisplay");
+        if(!leaderDiv) return;
+        let users = getAllUsers();
+        let entries = [];
+        for(let [name, data] of Object.entries(users)) {
+            entries.push({ name, bestScore: data.bestScore || 0 });
+        }
+        entries.sort((a,b) => b.bestScore - a.bestScore);
+        let top5 = entries.slice(0,5);
+        leaderDiv.innerHTML = "<h4><i class='fas fa-trophy'></i> ගෝලීය ශූරයෝ</h4><ol>";
+        top5.forEach(entry => {
+            let isCurr = currentUser && entry.name === currentUser.username;
+            leaderDiv.innerHTML += `<li class="${isCurr ? 'current-user-highlight' : ''}">${entry.name} - ${entry.bestScore} ලකුණු</li>`;
+        });
+        leaderDiv.innerHTML += "</ol>";
+        if(currentUser) {
+            userStatsDiv.innerHTML = `
+                <h4><i class='fas fa-user-circle'></i> ${currentUser.username}</h4>
+                <div>📊 වත්මන් ලකුණු: ${gameState.score}</div>
+                <div>🏆 පුද්ගලික වාර්තාව: ${currentUser.bestScore || 0}</div>
+                <div>🎯 මට්ටම ${gameState.level} · ප්‍රශ්නය ${gameState.qIndex+1}/${getLevelQuestions(gameState.level).length}</div>
+            `;
+        }
+    }
+
+    function logout() {
+        if(autoTimer) clearTimeout(autoTimer);
+        if(currentUser) persistUserProgress();
+        currentUser = null;
+        showLoginScreen();
+    }
+
+    function buildGameUI() {
+        document.getElementById("appRoot").innerHTML = `
+            <div class="game-container">
+                <div class="game-header">
+                    <h1>🇱🇰 ත්‍රිප්ත ඥාන තරගය 🇱🇰</h1>
+                    <div class="level-badge" id="levelName">Level 1 · සිංහල වචන</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-box">📊 ප්‍රශ්නය <span id="qCounter">0/50</span></div>
+                    <div class="stat-box">⭐ ලකුණු <span id="scoreSpan">0/100</span></div>
+                    <div class="stat-box">🏆 මට්ටම <span id="levelIndexSpan">1</span></div>
+                </div>
+                <div class="quiz-area">
+                    <div class="question-card">
+                        <div class="question-icon" id="questionIcon"><i class="fas fa-language"></i></div>
+                        <div class="question-text" id="questionText">Loading...</div>
+                    </div>
+                    <div class="options-grid" id="optionsContainer"></div>
+                    <div class="feedback" id="feedbackMsg">✨ පිළිතුරක් තෝරන්න.</div>
+                    <div class="action-buttons">
+                        <button class="retry-btn" id="retryLevelBtn">⟳ මෙම මට්ටම නැවත (ප්‍රශ්න අලුත්වනී)</button>
+                        <button class="logout-btn" id="logoutBtn">🚪 ඉවත්වන්න</button>
+                    </div>
+                </div>
+                <div class="highscore-panel">
+                    <div class="user-stats" id="userStatsDisplay"></div>
+                    <div class="leaderboard" id="leaderboardList"></div>
+                </div>
+            </div>
+        `;
+        document.getElementById("retryLevelBtn").onclick = () => resetCurrentLevel();
+        document.getElementById("logoutBtn").onclick = () => logout();
+
+        // restore state from currentUser
+        gameState.level = currentUser.level;
+        gameState.qIndex = currentUser.qIndex;
+        gameState.score = currentUser.score;
+        gameState.answered = false;
+        gameState.awaitingNext = false;
+        // ensure questions are loaded but not forced fresh (keep existing progress)
+        if(!questionsCache[gameState.level]) getLevelQuestions(gameState.level, false);
+        loadCurrentQuestion();
+        renderLeaderboardAndStats();
+    }
+
+    function showLoginScreen() {
+        document.getElementById("appRoot").innerHTML = `
+            <div class="login-overlay">
+                <div class="login-card">
+                    <h2><i class="fas fa-gamepad"></i> පිවිසෙන්න</h2>
+                    <input type="text" id="loginUsername" placeholder="පරිශීලක නම" autocomplete="off">
+                    <input type="password" id="loginPassword" placeholder="මුරපදය">
+                    <button id="loginBtn">ලොග් වන්න / නව ගිණුම</button>
+                    <div class="error-msg" id="loginError"></div>
+                </div>
+            </div>
+        `;
+        document.getElementById("loginBtn").onclick = () => {
+            let user = document.getElementById("loginUsername").value.trim();
+            let pass = document.getElementById("loginPassword").value.trim();
+            if(!user || !pass) { document.getElementById("loginError").innerText = "නම සහ මුරපදය අවශ්‍යයි"; return; }
+            let loaded = loadUser(user, pass);
+            if(loaded) {
+                currentUser = loaded;
+                buildGameUI();
+            } else {
+                document.getElementById("loginError").innerText = "මුරපදය වැරදියි";
+            }
+        };
+    }
+
+    showLoginScreen();
+
+    /* ========== ඇන්ඩ්‍රොයිඩ් සඳහා සටහන ==========
+       මෙම ක්‍රිඩාව සම්පූර්ණයෙන්ම Android බ්‍රවුසරයේ (Chrome, Edge, Firefox) ක්‍රියා කරයි. 
+       තවදුරටත් standalone app එකක් ලෙස පරිවර්තනය කිරීමට:
+       1. PWA (Progressive Web App) බවට හරවා ගෙන 'Add to Home Screen' මගින් ස්ථාපනය කරන්න.
+       2.  WebView භාවිතා කරමින් Android Studio මගින් APK බවට හරවන්න (Capacitor / Cordova මගින් පහසුවෙන්).
+       දැනටමත් ස්පර්ශ පාලනය, responsive layout නිසා ඕනෑම Android දුරකථනයක සුමටව ධාවනය වේ.
+    */
+</script>
+</body>
+</html>

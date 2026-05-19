@@ -1,0 +1,7 @@
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/HAYATO-V1.2/sw.js')
+      .then(reg => console.log('SW registered:', reg))
+      .catch(err => console.log('SW error:', err));
+  }
+</script>

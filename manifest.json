@@ -1,0 +1,12 @@
+{
+  "background_color": "#ffffff",
+  "description": "ඥාණ තරගය",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "HAYATO-V1.2",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "HAYATO-V1.2",
+  "start_url": "/",
+  "theme_color": "#ffffff"
+}
